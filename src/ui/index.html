@@ -1,0 +1,577 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>masterly</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%234f46e5'/%3E%3Cpath d='M8 22V11l8 7 8-7v11' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f7f6f3;--panel:#ffffff;--panel2:#f1efeb;--line:#e4e1db;--text:#1d1b18;--muted:#605b53;--faint:#8f897f;
+  --accent:#4f46e5;--accent-ink:#fff;--accent-soft:#ecebfd;--good:#0f8a5f;--good-soft:#e2f5ec;--warn:#a5600a;--warn-soft:#fbf0dc;
+  --bad:#c03a2b;--bad-soft:#fbe7e4;--radius:14px;--shadow:0 1px 2px rgba(30,25,15,.05),0 4px 14px rgba(30,25,15,.05);
+  --serif:ui-serif,"Iowan Old Style","Palatino Linotype",Georgia,serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#121212;--panel:#1b1b1d;--panel2:#232326;--line:#2e2e33;--text:#ecebe8;--muted:#a8a49c;--faint:#77736c;
+  --accent:#8b85ff;--accent-ink:#141235;--accent-soft:#25234a;--good:#3ccf91;--good-soft:#14301f;--warn:#f0b04a;--warn-soft:#33270f;
+  --bad:#ff7d6e;--bad-soft:#3a1d19;--shadow:none;
+}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent)}
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+aside{border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:14px;background:var(--panel2);position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:10px;font:700 20px/1 var(--serif);letter-spacing:-.01em;padding:2px 6px}
+.brand svg{width:30px;height:30px}
+.ver{font:500 11px var(--mono);color:var(--faint)}
+.side-h{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:650;padding:0 8px}
+.clist{display:flex;flex-direction:column;gap:2px}
+.citem{display:flex;align-items:center;gap:10px;border:0;background:none;text-align:left;padding:8px;border-radius:10px;cursor:pointer;width:100%}
+.citem:hover{background:var(--panel)}
+.citem[aria-current=true]{background:var(--panel);box-shadow:var(--shadow);outline:1px solid var(--line)}
+.citem .n{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.citem .s{font-size:12px;color:var(--muted)}
+.ring{flex:none}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:6px}
+main{min-width:0;padding:26px clamp(16px,4vw,48px) 60px}
+.wrap{max-width:900px;margin:0 auto}
+h1{font:700 30px/1.15 var(--serif);letter-spacing:-.015em;margin:0}
+h2{font:700 19px/1.3 var(--serif);margin:0 0 10px}
+.muted{color:var(--muted)}.faint{color:var(--faint)}.small{font-size:13px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid var(--line);background:var(--panel);padding:8px 14px;border-radius:10px;cursor:pointer;font-weight:600;white-space:nowrap}
+.btn:hover{background:var(--panel2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.07)}
+.btn.ghost{background:none;border-color:transparent}
+.btn.danger{color:var(--bad)}
+.btn.sm{padding:5px 10px;font-size:13px;border-radius:8px}
+.btn:disabled{opacity:.5;cursor:default}
+input[type=text],input[type=password],input[type=url],input[type=number],select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+textarea{resize:vertical;min-height:110px;line-height:1.5}
+:focus-visible{outline:2px solid color-mix(in srgb,var(--accent) 60%,transparent);outline-offset:2px}
+label.f{display:block;font-size:13px;font-weight:600;color:var(--muted);margin:12px 0 5px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:18px 0 22px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:9px 13px;cursor:pointer;color:var(--muted);font-weight:600;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs button[aria-selected=true]{color:var(--text);border-bottom-color:var(--accent)}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:650;background:var(--panel2);color:var(--muted);white-space:nowrap}
+.chip.accent{background:var(--accent-soft);color:var(--accent)}.chip.good{background:var(--good-soft);color:var(--good)}
+.chip.warn{background:var(--warn-soft);color:var(--warn)}.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.banner{border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.banner.warn{background:var(--warn-soft);color:var(--warn)}.banner.info{background:var(--accent-soft);color:var(--accent)}
+/* study */
+.qcard{padding:28px}
+.qprompt{font:600 21px/1.4 var(--serif);margin:12px 0 20px;white-space:pre-wrap}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;border:1.5px solid var(--line);background:var(--panel);border-radius:12px;padding:12px 14px;cursor:pointer;width:100%}
+.opt:hover:not(:disabled){border-color:color-mix(in srgb,var(--accent) 50%,var(--line))}
+.opt .k{flex:none;width:26px;height:26px;border-radius:8px;background:var(--panel2);display:grid;place-items:center;font:700 13px var(--mono);color:var(--muted)}
+.opt.correct{border-color:var(--good);background:var(--good-soft)}.opt.correct .k{background:var(--good);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}.opt.wrong .k{background:var(--bad);color:#fff}
+.opt:disabled{cursor:default}
+.result{margin-top:18px;border-radius:12px;padding:14px 16px}
+.result.ok{background:var(--good-soft)}.result.no{background:var(--bad-soft)}.result.mid{background:var(--warn-soft)}
+.result b.t{display:block;margin-bottom:4px}
+.quote{border-left:3px solid var(--accent);padding:4px 0 4px 14px;margin:12px 0 0;font-family:var(--serif);font-size:15.5px}
+.quote .w{display:block;font:500 12.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--faint);margin-top:4px}
+.rates{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:18px}
+.rate{border:1.5px solid var(--line);background:var(--panel);border-radius:12px;padding:10px 6px;cursor:pointer;text-align:center}
+.rate b{display:block}.rate span{font-size:12px;color:var(--muted)}
+.rate.sug{border-color:var(--accent);background:var(--accent-soft)}
+.progressbar{height:6px;background:var(--panel2);border-radius:99px;overflow:hidden;margin:6px 0 18px}
+.progressbar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s}
+.kbd{font:600 11px var(--mono);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;color:var(--faint)}
+/* map */
+.path{display:flex;flex-direction:column;gap:0;position:relative}
+.node{display:grid;grid-template-columns:40px 1fr;gap:14px;position:relative}
+.node:not(:last-child)::before{content:"";position:absolute;left:19px;top:40px;bottom:-4px;width:2px;background:var(--line)}
+.dot{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:14px;background:var(--panel2);color:var(--faint);border:2px solid var(--line);z-index:1}
+.dot.ready{border-color:var(--accent);color:var(--accent);background:var(--panel)}
+.dot.learning{background:var(--warn-soft);border-color:var(--warn);color:var(--warn)}
+.dot.passed{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.dot.mastered{background:var(--good);border-color:var(--good);color:#fff}
+.nbody{padding:6px 0 22px;min-width:0}
+.nbody summary{cursor:pointer;list-style:none;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.nbody summary::-webkit-details-marker{display:none}
+.nbody .nm{font-weight:700;font-size:16px}
+.mbar{height:5px;background:var(--panel2);border-radius:99px;overflow:hidden;width:140px}
+.mbar i{display:block;height:100%;background:var(--good)}
+/* ask */
+.thread{display:flex;flex-direction:column;gap:14px;margin-bottom:16px}
+.msg.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);padding:10px 14px;border-radius:14px 14px 4px 14px;max-width:80%}
+.msg.ai{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.msg.ai p{margin:0 0 8px}
+.cite{font:700 11px var(--mono);background:var(--accent-soft);color:var(--accent);padding:1px 5px;border-radius:5px;vertical-align:1px}
+/* material */
+.drop{border:2px dashed var(--line);border-radius:14px;padding:28px;text-align:center;cursor:pointer;transition:.15s}
+.drop.over,.drop:hover{border-color:var(--accent);background:var(--accent-soft)}
+.src{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.src:last-child{border-bottom:0}
+.ext{font:700 11px var(--mono);text-transform:uppercase;background:var(--panel2);color:var(--muted);border-radius:6px;padding:4px 6px;min-width:44px;text-align:center}
+.log{font:12.5px/1.6 var(--mono);color:var(--muted);background:var(--panel2);border-radius:10px;padding:10px 12px;max-height:180px;overflow:auto;margin-top:12px;white-space:pre-wrap}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.kpi .v{font:700 28px/1.1 var(--serif)}.kpi .l{color:var(--muted);font-size:13px}
+.empty{text-align:center;padding:50px 20px}
+.empty h1{margin-bottom:8px}
+dialog{border:1px solid var(--line);border-radius:16px;padding:0;background:var(--panel);color:var(--text);width:min(560px,calc(100vw - 32px));box-shadow:0 24px 60px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(10,8,5,.45)}
+.dh{padding:18px 20px 0;display:flex;justify-content:space-between;align-items:center}
+.db{padding:6px 20px 20px}
+.df{padding:14px 20px;border-top:1px solid var(--line);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;opacity:0;transition:.2s;pointer-events:none;max-width:calc(100vw - 32px);z-index:9}
+.toast.show{opacity:1}
+.hide{display:none!important}
+.spin{width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:s .7s linear infinite;display:inline-block}
+@keyframes s{to{transform:rotate(360deg)}}
+svg.chart text{fill:var(--faint);font-size:10px}
+.mobilebar{display:none}
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  aside.collapsed .clist,aside.collapsed .side-h,aside.collapsed .side-foot{display:none}
+  .mobilebar{display:flex}
+  .rates{grid-template-columns:repeat(2,1fr)}
+  .qcard{padding:20px}
+  .qprompt{font-size:19px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside id="aside" class="collapsed">
+    <div class="row" style="justify-content:space-between">
+      <div class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="var(--accent)"/><path d="M8 22V11l8 7 8-7v11" stroke="var(--accent-ink)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>masterly</div>
+      <button class="btn sm ghost mobilebar" id="menu" aria-label="Show courses">☰</button>
+    </div>
+    <button class="btn primary" id="new-course">+ New course</button>
+    <div class="side-h">Courses</div>
+    <div class="clist" id="clist"></div>
+    <div class="side-foot">
+      <div id="model-chip" class="small muted" style="padding:0 8px"></div>
+      <button class="btn sm" id="open-settings">Model settings</button>
+      <div class="ver" style="padding:0 8px">v__MASTERLY_VERSION__</div>
+    </div>
+  </aside>
+  <main><div class="wrap" id="view"></div></main>
+</div>
+
+<dialog id="settings">
+  <div class="dh"><h2 style="margin:0">Model settings</h2><button class="btn sm ghost" data-close>✕</button></div>
+  <div class="db">
+    <p class="small muted" style="margin-top:4px">masterly works with any OpenAI-compatible endpoint. It finds a running <a href="https://github.com/Ethos6/freeflow" target="_blank" rel="noopener">freeflow</a> gateway or Ollama by itself.</p>
+    <div class="row small" id="presets"></div>
+    <label class="f" for="s-base">Base URL</label><input type="url" id="s-base" placeholder="https://api.example.com/v1" spellcheck="false">
+    <label class="f" for="s-model">Model</label><input type="text" id="s-model" placeholder="e.g. llama-3.3-70b-versatile" spellcheck="false">
+    <label class="f" for="s-key">API key <span class="faint" id="s-keystate"></span></label><input type="password" id="s-key" autocomplete="off" placeholder="Leave empty to keep the saved key">
+    <p class="small muted" id="s-current" style="margin-bottom:0"></p>
+    <p class="small" id="s-test"></p>
+  </div>
+  <div class="df"><button class="btn" id="s-try">Test</button><button class="btn primary" id="s-save">Save</button></div>
+</dialog>
+
+<dialog id="newc">
+  <div class="dh"><h2 style="margin:0">New course</h2><button class="btn sm ghost" data-close>✕</button></div>
+  <div class="db">
+    <label class="f" for="n-name">What are you learning?</label>
+    <input type="text" id="n-name" placeholder="e.g. Cell biology, Contract law, Rust ownership">
+    <p class="small muted">Next you'll add your material: notes, textbooks, papers or slides as PDF, Word, EPUB, Markdown, HTML or text.</p>
+  </div>
+  <div class="df"><button class="btn primary" id="n-create">Create course</button></div>
+</dialog>
+
+<input type="file" id="file" multiple class="hide" accept="__SUPPORTED__">
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+let S = null, C = null, tab = "study", session = null, askThread = [], buildLog = [];
+
+async function api(path, opts = {}) {
+  const init = { headers: { "x-masterly": "1" } };
+  if (opts.body !== undefined) { init.method = opts.method || "POST"; init.headers["content-type"] = "application/json"; init.body = JSON.stringify(opts.body); }
+  else if (opts.method) init.method = opts.method;
+  const r = await fetch("/api" + path, init);
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 2800); }
+
+/** Tiny safe Markdown: paragraphs, lists, bold, italic, code, [P3] citation chips. */
+function md(text) {
+  const inline = (s) => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<i>$2</i>").replace(/\[(P\d+)\]/g, '<span class="cite">$1</span>');
+  return String(text || "").trim().split(/\n{2,}/).map((block) => {
+    const lines = block.split("\n");
+    if (lines.every((l) => /^\s*[-*]\s+/.test(l))) return "<ul>" + lines.map((l) => `<li>${inline(l.replace(/^\s*[-*]\s+/, ""))}</li>`).join("") + "</ul>";
+    if (lines.every((l) => /^\s*\d+[.)]\s+/.test(l))) return "<ol>" + lines.map((l) => `<li>${inline(l.replace(/^\s*\d+[.)]\s+/, ""))}</li>`).join("") + "</ol>";
+    return `<p>${lines.map(inline).join("<br>")}</p>`;
+  }).join("");
+}
+function ring(p, size = 30) {
+  const r = size / 2 - 3, c = 2 * Math.PI * r, v = Math.max(0, Math.min(1, p || 0));
+  return `<svg class="ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}"><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--line)" stroke-width="3"/><circle cx="${size / 2}" cy="${size / 2}" r="${r}" fill="none" stroke="var(--good)" stroke-width="3" stroke-dasharray="${c * v} ${c}" transform="rotate(-90 ${size / 2} ${size / 2})" stroke-linecap="round"/></svg>`;
+}
+const fmtInterval = (ms) => { const m = ms / 60000; if (m < 60) return `${Math.max(1, Math.round(m))} min`; const d = ms / 86400000; if (d < 1.5) return "1 day"; if (d < 31) return `${Math.round(d)} days`; if (d < 365) return `${Math.round(d / 30)} mo`; return `${(d / 365).toFixed(1)} yr`; };
+
+// ------------------------------------------------------------ data
+async function loadState() { S = await api("/state"); renderSide(); }
+async function openCourse(id, t) {
+  C = await api("/courses/" + encodeURIComponent(id));
+  if (t) tab = t;
+  try { localStorage.setItem("masterly-course", id); } catch {}
+  session = null; askThread = []; buildLog = [];
+  renderSide(); render();
+  if (C.building) followBuild();
+}
+async function refreshCourse() { C = await api("/courses/" + encodeURIComponent(C.id)); renderSide(); }
+
+// ------------------------------------------------------------ sidebar
+function renderSide() {
+  $("#clist").innerHTML = S.courses.map((c) => `<button class="citem" data-id="${esc(c.id)}" aria-current="${C && C.id === c.id}">${ring(c.overall)}<span class="grow"><span class="n" style="display:block">${esc(c.name)}</span><span class="s">${c.dueNow ? `${c.dueNow} due · ` : ""}${c.concepts ? `${c.mastered}/${c.concepts} mastered` : c.sources ? "not built yet" : "no material yet"}</span></span></button>`).join("") || `<p class="small muted" style="padding:0 8px">No courses yet.</p>`;
+  $$("#clist .citem").forEach((b) => b.onclick = () => { openCourse(b.dataset.id); $("#aside").classList.add("collapsed"); });
+  $("#model-chip").innerHTML = S.llm.configured ? `Model: <b>${esc(S.llm.model)}</b><br><span class="faint">${esc(S.llm.source)}</span>` : `<span style="color:var(--warn)">No model connected</span>`;
+}
+
+// ------------------------------------------------------------ main view
+function render() {
+  const v = $("#view");
+  if (!C) {
+    v.innerHTML = `<div class="empty">
+      <h1>Learn anything from your own material.</h1>
+      <p class="muted" style="max-width:560px;margin:10px auto 22px">masterly turns your notes, textbooks and papers into a course: the key concepts in the order to learn them, questions that quote your sources word for word, and reviews timed so you remember.</p>
+      ${S.llm.configured ? "" : `<div class="banner warn" style="max-width:560px;margin:0 auto 18px;justify-content:center">Connect a model first. <button class="btn sm" data-act="settings">Model settings</button></div>`}
+      <button class="btn primary" data-act="new">Create your first course</button></div>`;
+    bindActs(v);
+    return;
+  }
+  const st = C.stats;
+  v.innerHTML = `
+    <div class="row" style="align-items:flex-start">
+      <div class="grow"><h1>${esc(C.name)}</h1>
+        <div class="row small muted" style="margin-top:8px">
+          ${st.dueNow ? `<span class="chip accent">${st.dueNow} due now</span>` : ""}
+          <span class="chip ${st.mastered ? "good" : ""}">${st.mastered}/${st.concepts} concepts mastered</span>
+          ${st.streak ? `<span class="chip warn">${st.streak}-day streak</span>` : ""}
+          <span class="faint">${C.sources.length} source${C.sources.length === 1 ? "" : "s"} · ${st.questions} questions</span>
+        </div>
+      </div>
+    </div>
+    <div class="tabs" role="tablist">${[["study", "Study"], ["map", "Map"], ["ask", "Ask"], ["material", "Material"], ["progress", "Progress"]].map(([k, n]) => `<button role="tab" data-tab="${k}" aria-selected="${tab === k}">${n}</button>`).join("")}</div>
+    <div id="panel"></div>`;
+  $$(".tabs button").forEach((b) => b.onclick = async () => { tab = b.dataset.tab; if (tab !== "study" && tab !== "ask") { try { await refreshCourse(); } catch {} } render(); });
+  ({ study: renderStudy, map: renderMap, ask: renderAsk, material: renderMaterial, progress: renderProgress })[tab]();
+}
+function bindActs(root) {
+  $$("[data-act]", root).forEach((b) => b.onclick = () => ({ settings: openSettings, new: () => $("#newc").showModal(), material: () => { tab = "material"; render(); }, map: () => { tab = "map"; render(); } })[b.dataset.act]?.());
+}
+
+// ------------------------------------------------------------ study
+let studyToken = 0;
+async function renderStudy(conceptId) {
+  const p = $("#panel");
+  const my = ++studyToken;
+  if (!C.stats.questions) {
+    p.innerHTML = `<div class="card empty"><h2>Nothing to study yet</h2><p class="muted">${C.sources.length ? "Your material is in. Build the course to get concepts and questions." : "Add your notes, textbook chapters or papers to get started."}</p><button class="btn primary" data-act="material">${C.sources.length ? "Build the course" : "Add material"}</button></div>`;
+    return bindActs(p);
+  }
+  if (!session || (conceptId !== undefined && session.concept !== conceptId)) session = { concept: conceptId || "", done: 0, correct: 0, total: null };
+  session.keys = null;
+  p.innerHTML = `<div class="card qcard"><span class="spin"></span></div>`;
+  const n = await api(`/courses/${encodeURIComponent(C.id)}/next${session.concept ? `?concept=${encodeURIComponent(session.concept)}` : ""}`);
+  if (my !== studyToken || tab !== "study") return; // a newer view replaced this one
+  if (session.total === null) session.total = n.queue.length;
+  if (!n.question) {
+    const next = C.stats.forecast.findIndex((x, i) => i > 0 && x > 0);
+    p.innerHTML = `<div class="card empty">
+      <div style="font-size:44px">✓</div><h2>${session.done ? `Session complete: ${session.correct} of ${session.done} right` : "You're all caught up"}</h2>
+      <p class="muted">${n.locked ? `${n.locked} questions unlock as you pass the concepts they build on. ` : ""}${next > 0 ? `Next reviews: ${C.stats.forecast[next]} question${C.stats.forecast[next] > 1 ? "s" : ""} in ${next} day${next > 1 ? "s" : ""}.` : "Come back tomorrow for new questions."}</p>
+      <div class="row" style="justify-content:center">${session.concept ? `<button class="btn" id="all">Study all concepts</button>` : ""}<button class="btn" data-act="map">See your map</button></div></div>`;
+    bindActs(p);
+    $("#all") && ($("#all").onclick = () => { session = null; renderStudy(""); });
+    return;
+  }
+  const q = n.question;
+  const remaining = n.queue.length;
+  const total = Math.max(session.total, session.done + remaining);
+  const keys = ["A", "B", "C", "D", "E"];
+  p.innerHTML = `
+    <div class="row small muted"><span>${session.done} of ${total}</span><span class="grow"></span>${session.concept ? `<span class="chip accent">Focused: ${esc(q.conceptName)}</span><button class="btn sm ghost" id="unfocus">Show all</button>` : ""}</div>
+    <div class="progressbar"><i style="width:${(session.done / Math.max(1, total)) * 100}%"></i></div>
+    <div class="card qcard" id="qcard">
+      <div class="row"><span class="chip">${esc(q.conceptName)}</span>${q.isNew ? `<span class="chip accent">New</span>` : `<span class="chip">Review</span>`}<span class="grow"></span><button class="btn sm ghost" id="hint">Hint</button></div>
+      <div class="qprompt">${q.type === "tf" ? `<span class="faint" style="font:600 13px/1 -apple-system,sans-serif;display:block;margin-bottom:8px;letter-spacing:.04em">TRUE OR FALSE?</span>` : ""}${esc(q.prompt)}</div>
+      <div id="hintbox"></div>
+      ${q.type === "mcq" ? `<div class="opts">${q.options.map((o, i) => `<button class="opt" data-i="${i}"><span class="k">${keys[i]}</span><span>${esc(o)}</span></button>`).join("")}</div>` : ""}
+      ${q.type === "tf" ? `<div class="opts" style="grid-template-columns:1fr 1fr"><button class="opt" data-tf="true"><span class="k">T</span><span>True</span></button><button class="opt" data-tf="false"><span class="k">F</span><span>False</span></button></div>` : ""}
+      ${q.type === "short" ? `<textarea id="ans" placeholder="Answer in your own words…"></textarea><div class="row" style="margin-top:10px"><span class="small faint grow"><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span> to submit</span><button class="btn primary" id="submit">Check answer</button></div>` : ""}
+      <div id="after"></div>
+    </div>`;
+  $("#unfocus") && ($("#unfocus").onclick = () => { session = null; renderStudy(""); });
+  $("#hint").onclick = async () => {
+    $("#hint").disabled = true; $("#hintbox").innerHTML = `<p class="small muted"><span class="spin"></span></p>`;
+    try { const h = await api(`/courses/${encodeURIComponent(C.id)}/hint`, { body: { question: q.id } }); $("#hintbox").innerHTML = `<div class="banner info small" style="margin-bottom:16px">💡 ${esc(h.hint)}</div>`; }
+    catch (e) { $("#hintbox").innerHTML = `<p class="small" style="color:var(--bad)">${esc(e.message)}</p>`; }
+  };
+  const submit = async (answer) => {
+    $$("#qcard .opt, #submit").forEach((b) => b.disabled = true);
+    if ($("#ans")) $("#ans").disabled = true;
+    $("#after").innerHTML = `<p class="muted small" style="margin-top:16px"><span class="spin"></span> ${q.type === "short" ? "Checking your answer against the material…" : ""}</p>`;
+    let g;
+    try { g = await api(`/courses/${encodeURIComponent(C.id)}/answer`, { body: { question: q.id, answer } }); }
+    catch (e) { $("#after").innerHTML = `<p style="color:var(--bad)">${esc(e.message)}</p>`; $$("#qcard .opt, #submit").forEach((b) => b.disabled = false); if ($("#ans")) $("#ans").disabled = false; return; }
+    showResult(q, g, answer);
+  };
+  $$("#qcard .opt[data-i]").forEach((b) => b.onclick = () => submit(Number(b.dataset.i)));
+  $$("#qcard .opt[data-tf]").forEach((b) => b.onclick = () => submit(b.dataset.tf === "true"));
+  if ($("#submit")) { $("#submit").onclick = () => submit($("#ans").value); $("#ans").onkeydown = (e) => { if ((e.ctrlKey || e.metaKey) && e.key === "Enter") submit($("#ans").value); }; $("#ans").focus(); }
+  session.keys = (e) => {
+    if (e.target.matches("textarea,input")) return;
+    const k = e.key.toUpperCase();
+    if (q.type === "mcq" && keys.slice(0, q.options.length).includes(k)) $$("#qcard .opt[data-i]")[keys.indexOf(k)]?.click();
+    if (q.type === "mcq" && /^[1-5]$/.test(k)) $$("#qcard .opt[data-i]")[Number(k) - 1]?.click();
+    if (q.type === "tf" && (k === "T" || k === "F")) $(`#qcard .opt[data-tf="${k === "T"}"]`)?.click();
+  };
+}
+function showResult(q, g, answer) {
+  if (q.type === "mcq") $$("#qcard .opt[data-i]").forEach((b) => { const i = Number(b.dataset.i); if (i === g.reveal.answer) b.classList.add("correct"); else if (i === answer) b.classList.add("wrong"); });
+  if (q.type === "tf") $$("#qcard .opt[data-tf]").forEach((b) => { const v = b.dataset.tf === "true"; if (v === g.reveal.answer) b.classList.add("correct"); else if (v === answer) b.classList.add("wrong"); });
+  const cls = g.selfGrade ? "mid" : g.correct ? (g.score >= 0.85 ? "ok" : "mid") : "no";
+  const title = g.selfGrade ? "Compare with the model answer" : g.correct ? (g.score >= 0.85 ? "Correct" : "Partly right") : "Not quite";
+  const names = ["", "Again", "Hard", "Good", "Easy"];
+  $("#after").innerHTML = `
+    <div class="result ${cls}"><b class="t">${title}${q.type === "short" && !g.selfGrade ? ` · ${Math.round(g.score * 100)}%` : ""}</b>${md(g.feedback)}
+      ${g.misconception ? `<p class="small"><b>Watch out:</b> ${esc(g.misconception)}</p>` : ""}</div>
+    ${q.type === "short" ? `<div style="margin-top:14px"><b>Model answer</b>${md(String(g.reveal.answer))}${g.reveal.keyPoints?.length ? `<ul class="small">${g.reveal.keyPoints.map((k, i) => `<li>${(g.covered || []).includes(i) ? "✓ " : (g.missing || []).includes(i) ? "✗ " : ""}${esc(k)}</li>`).join("")}</ul>` : ""}</div>` : ""}
+    ${g.reveal.explanation ? `<p style="margin:14px 0 0">${esc(g.reveal.explanation)}</p>` : ""}
+    ${g.reveal.evidence.map((e) => `<blockquote class="quote">“${esc(e.excerpt)}”<span class="w">${esc(e.where || "")}</span></blockquote>`).join("")}
+    <div class="small muted" style="margin-top:18px">How well did you know it? This sets when you'll see it again.</div>
+    <div class="rates">${[1, 2, 3, 4].map((r) => `<button class="rate ${r === g.suggested ? "sug" : ""}" data-r="${r}"><b>${names[r]}</b><span>${fmtInterval(g.intervals[r])}</span></button>`).join("")}</div>
+    <p class="small faint" style="margin:8px 0 0">Keys <span class="kbd">1</span>–<span class="kbd">4</span>, or <span class="kbd">Enter</span> for the suggestion.</p>`;
+  fillWhere(g.reveal.evidence);
+  let rated = false;
+  const rate = async (r) => {
+    if (rated) return;
+    rated = true;
+    session.keys = null;
+    $$(".rate").forEach((b) => b.disabled = true);
+    try {
+      const res = await api(`/courses/${encodeURIComponent(C.id)}/rate`, { body: { question: q.id, rating: r, answer: typeof answer === "string" ? answer : undefined } });
+      session.done++; if (r >= 2) session.correct++;
+      C.stats = res.stats;
+      loadState();
+      renderStudy();
+    } catch (e) { toast(e.message); rated = false; $$(".rate").forEach((b) => b.disabled = false); }
+  };
+  $$(".rate").forEach((b) => b.onclick = () => rate(Number(b.dataset.r)));
+  session.keys = (e) => { if (e.target.matches("textarea,input")) return; if (/^[1-4]$/.test(e.key)) rate(Number(e.key)); if (e.key === "Enter") rate(g.suggested); };
+}
+function fillWhere(evidence) {
+  // evidence comes without location; look it up from the concept list when possible
+  const quotes = $$("#after .quote .w");
+  evidence.forEach((e, i) => { if (quotes[i] && !quotes[i].textContent) quotes[i].textContent = whereOf(e); });
+}
+function whereOf(e) {
+  for (const c of C.concepts) for (const x of c.evidence) if (x.excerpt === e.excerpt) return x.where;
+  return e.chunk ? `passage ${e.chunk}` : "";
+}
+document.addEventListener("keydown", (e) => { if (tab === "study" && session?.keys && !$("dialog[open]")) session.keys(e); });
+
+// ------------------------------------------------------------ map
+function renderMap() {
+  const p = $("#panel");
+  if (!C.concepts.length) { p.innerHTML = `<div class="card empty"><h2>No concept map yet</h2><p class="muted">Build the course from your material to see its concepts in learning order.</p><button class="btn primary" data-act="material">Go to material</button></div>`; return bindActs(p); }
+  const label = { locked: "Locked", ready: "Ready", learning: "Learning", passed: "Passed", mastered: "Mastered" };
+  const chip = { locked: "", ready: "accent", learning: "warn", passed: "accent", mastered: "good" };
+  const names = new Map(C.concepts.map((c) => [c.id, c.name]));
+  p.innerHTML = `<p class="muted small" style="margin-top:0">Concepts in the order to learn them. A concept unlocks once you've answered every question of the concepts it builds on correctly (passed). It counts as mastered once your reviews show you'll remember it for at least ten days.</p>
+  <div class="path">${C.concepts.map((c, i) => `
+    <div class="node"><div class="dot ${c.state.status}">${c.state.status === "mastered" ? "✓" : c.state.status === "locked" ? "🔒" : i + 1}</div>
+      <details class="nbody"><summary><span class="nm">${esc(c.name)}</span><span class="chip ${chip[c.state.status]}">${label[c.state.status]}</span>
+        <span class="mbar" title="${Math.round(c.state.mastery * 100)}% recall"><i style="width:${c.state.mastery * 100}%"></i></span>
+        <span class="small faint">${c.state.answered}/${c.state.questions} answered</span></summary>
+        <p style="margin:10px 0 6px">${esc(c.summary)}</p>
+        ${c.prereqs.length ? `<p class="small muted" style="margin:0">Builds on: ${c.prereqs.map((x) => esc(names.get(x) || x)).join(", ")}</p>` : ""}
+        ${c.evidence.map((e) => `<blockquote class="quote">“${esc(e.excerpt)}”<span class="w">${esc(e.where)}</span></blockquote>`).join("")}
+        <div class="row" style="margin-top:12px"><button class="btn sm" data-focus="${esc(c.id)}" ${c.state.status === "locked" ? `disabled title="Pass ${esc(c.state.blockedBy.map((b) => names.get(b)).join(", "))} first"` : ""}>Study this concept</button></div>
+      </details></div>`).join("")}</div>`;
+  $$("[data-focus]").forEach((b) => b.onclick = () => { tab = "study"; session = { concept: b.dataset.focus, done: 0, correct: 0, total: null }; render(); });
+}
+
+// ------------------------------------------------------------ ask
+function renderAsk() {
+  const p = $("#panel");
+  p.innerHTML = `<p class="muted small" style="margin-top:0">Ask anything about your material. Answers only use your sources, and every quote is checked against them.</p>
+    <div class="thread" id="thread">${askThread.map(renderMsg).join("")}</div>
+    <form id="askf" class="row"><input type="text" id="askq" class="grow" placeholder="e.g. How are photosynthesis and respiration linked?" autocomplete="off"><button class="btn primary">Ask</button></form>`;
+  $("#askf").onsubmit = async (e) => {
+    e.preventDefault();
+    const question = $("#askq").value.trim(); if (!question) return;
+    askThread.push({ me: question }, { pending: true }); renderAsk();
+    try { const a = await api(`/courses/${encodeURIComponent(C.id)}/ask`, { body: { question } }); askThread[askThread.length - 1] = a; }
+    catch (err) { askThread[askThread.length - 1] = { error: err.message }; }
+    renderAsk(); $("#askq").focus();
+  };
+}
+function renderMsg(m) {
+  if (m.me) return `<div class="msg me">${esc(m.me)}</div>`;
+  if (m.pending) return `<div class="msg ai"><span class="spin"></span> <span class="muted small">Reading your material…</span></div>`;
+  if (m.error) return `<div class="msg ai" style="color:var(--bad)">${esc(m.error)}</div>`;
+  return `<div class="msg ai">${!m.found ? `<span class="chip warn" style="margin-bottom:8px">Not in your material</span>` : ""}${md(m.answer)}
+    ${m.citations.map((c) => `<blockquote class="quote"><span class="cite">${esc(c.chunk)}</span> “${esc(c.excerpt)}”<span class="w">${esc(c.where)}</span></blockquote>`).join("")}
+    ${m.unverified ? `<p class="small faint" style="margin:10px 0 0">${m.unverified} quote${m.unverified > 1 ? "s" : ""} the model offered could not be found in your material and ${m.unverified > 1 ? "were" : "was"} left out.</p>` : ""}</div>`;
+}
+
+// ------------------------------------------------------------ material
+function renderMaterial() {
+  const p = $("#panel");
+  const b = C.build || {};
+  const built = b.status === "built";
+  p.innerHTML = `
+    <div class="card">
+      <h2>Sources</h2>
+      <div id="srcs">${C.sources.map((s) => `<div class="src"><span class="ext">${esc(s.type)}</span><div class="grow"><b>${esc(s.title)}</b><div class="small faint">${esc(s.file)} · ${Math.round(s.chars / 1000) || "<1"}k characters</div></div><button class="btn sm ghost danger" data-del="${esc(s.id)}" ${C.building ? "disabled" : ""}>Remove</button></div>`).join("") || `<p class="muted small">No material yet.</p>`}</div>
+      <div class="drop" id="drop" style="margin-top:14px" tabindex="0"><b>Drop files here</b> or click to choose<div class="small muted">PDF, Word (.docx), EPUB, Markdown, HTML or text · up to 100 MB each</div></div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <div class="row"><div class="grow"><h2 style="margin:0">Course</h2>
+        <div class="small muted" id="bstatus">${C.building ? "Building…" : built ? `Built with ${esc(b.model)} on ${new Date(b.at).toLocaleString()}` : b.status === "failed" ? `<span style="color:var(--bad)">Last build failed: ${esc(b.message)}</span>` : b.message ? esc(b.message) : C.sources.length ? "Ready to build." : "Add material, then build."}</div></div>
+        ${C.building ? `<button class="btn" id="cancel">Cancel</button>` : `<button class="btn primary" id="build" ${C.sources.length && S.llm.configured ? "" : "disabled"}>${built ? "Rebuild" : "Build course"}</button>`}</div>
+      ${built && b.rejected ? `<p class="small" style="margin:12px 0 0"><span class="chip good">grounded</span> ${C.stats.concepts} concepts and ${C.stats.questions} questions, every one backed by a verified quote. ${b.rejected.questions + b.rejected.concepts ? `${[b.rejected.concepts ? `${b.rejected.concepts} concept${b.rejected.concepts === 1 ? "" : "s"}` : "", b.rejected.questions ? `${b.rejected.questions} question${b.rejected.questions === 1 ? "" : "s"}` : ""].filter(Boolean).join(" and ")} ${b.rejected.questions + b.rejected.concepts === 1 ? "was" : "were"} discarded because ${b.rejected.questions + b.rejected.concepts === 1 ? "its quote wasn't" : "their quotes weren't"} in your material.` : ""}</p>` : ""}
+      ${!S.llm.configured ? `<div class="banner warn small" style="margin-top:12px">Building needs a model. <button class="btn sm" data-act="settings">Model settings</button></div>` : ""}
+      ${built ? `<p class="small muted" style="margin:10px 0 0">Rebuilding keeps your progress on questions that stay the same.</p>` : ""}
+      <div class="log ${buildLog.length ? "" : "hide"}" id="blog">${esc(buildLog.join("\n"))}</div>
+    </div>
+    <div class="card" style="margin-top:16px">
+      <h2>Settings</h2>
+      <div class="grid2">
+        <div><label class="f" for="cs-name">Name</label><input type="text" id="cs-name" value="${esc(C.name)}"></div>
+        <div><label class="f" for="cs-lang">Language for questions</label><input type="text" id="cs-lang" value="${esc(C.language)}" placeholder="Same as the material"></div>
+        <div><label class="f" for="cs-new">New questions per day</label><input type="number" id="cs-new" min="0" max="500" value="${C.settings.newPerDay}"></div>
+        <div><label class="f" for="cs-ret">Target recall</label><select id="cs-ret">${[0.8, 0.85, 0.9, 0.95].map((r) => `<option value="${r}" ${Math.abs(C.settings.retention - r) < 1e-9 ? "selected" : ""}>${Math.round(r * 100)}%${r === 0.9 ? " (recommended)" : ""}</option>`).join("")}</select></div>
+        <div><label class="f" for="cs-qpc">Questions per concept</label><input type="number" id="cs-qpc" min="1" max="8" value="${C.settings.questionsPerConcept}"></div>
+        <div><label class="f" for="cs-max">Maximum concepts</label><input type="number" id="cs-max" min="3" max="200" value="${C.settings.maxConcepts}"></div>
+      </div>
+      <div class="row" style="margin-top:16px"><button class="btn" id="cs-save">Save settings</button><span class="grow"></span>
+        <a class="btn sm" href="/api/courses/${encodeURIComponent(C.id)}/export/anki" download>Export to Anki</a>
+        <a class="btn sm" href="/api/courses/${encodeURIComponent(C.id)}/export/guide" download>Study guide (.md)</a>
+        <button class="btn sm danger" id="cs-del">Delete course</button></div>
+    </div>`;
+  bindActs(p);
+  const drop = $("#drop");
+  drop.onclick = () => $("#file").click();
+  drop.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); $("#file").click(); } };
+  drop.ondragover = (e) => { e.preventDefault(); drop.classList.add("over"); };
+  drop.ondragleave = () => drop.classList.remove("over");
+  drop.ondrop = (e) => { e.preventDefault(); drop.classList.remove("over"); upload([...e.dataTransfer.files]); };
+  $$("[data-del]").forEach((b) => b.onclick = async () => { if (!confirm("Remove this source? Rebuild afterwards to update the course.")) return; try { C = await api(`/courses/${encodeURIComponent(C.id)}/sources/${b.dataset.del}`, { method: "DELETE" }); render(); } catch (e) { toast(e.message); } });
+  $("#build") && ($("#build").onclick = startBuild);
+  $("#cancel") && ($("#cancel").onclick = () => api(`/courses/${encodeURIComponent(C.id)}/build/cancel`, { body: {} }));
+  $("#cs-save").onclick = async () => {
+    try { C = await api(`/courses/${encodeURIComponent(C.id)}/settings`, { body: { name: $("#cs-name").value, language: $("#cs-lang").value, newPerDay: $("#cs-new").value, retention: $("#cs-ret").value, questionsPerConcept: $("#cs-qpc").value, maxConcepts: $("#cs-max").value } }); await loadState(); render(); toast("Saved"); } catch (e) { toast(e.message); }
+  };
+  $("#cs-del").onclick = async () => { if (!confirm(`Delete "${C.name}" and all its progress? This cannot be undone.`)) return; await api(`/courses/${encodeURIComponent(C.id)}`, { method: "DELETE" }); C = null; try { localStorage.removeItem("masterly-course"); } catch {} await loadState(); render(); };
+}
+async function upload(files) {
+  for (const f of files) {
+    toast(`Reading ${f.name}…`);
+    try {
+      const buf = new Uint8Array(await f.arrayBuffer());
+      let bin = ""; for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
+      const r = await api(`/courses/${encodeURIComponent(C.id)}/sources`, { body: { name: f.name, data: btoa(bin) } });
+      C = r.course;
+      toast(r.duplicate ? `${f.name} is already in this course` : `Added ${f.name} (${r.passages} passages)`);
+    } catch (e) { toast(`${f.name}: ${e.message}`); }
+  }
+  await loadState(); tab = "material"; render();
+}
+$("#file").onchange = (e) => { upload([...e.target.files]); e.target.value = ""; };
+async function startBuild() {
+  try { buildLog = []; await api(`/courses/${encodeURIComponent(C.id)}/build`, { body: {} }); C.building = true; render(); followBuild(); }
+  catch (e) { toast(e.message); }
+}
+function followBuild() {
+  const id = C.id;
+  const es = new EventSource(`/api/courses/${encodeURIComponent(id)}/events`);
+  es.onmessage = async (m) => {
+    const ev = JSON.parse(m.data);
+    if (ev.type === "progress") { if (buildLog.at(-1) !== ev.message) buildLog.push(ev.message); }
+    if (ev.type === "done") buildLog.push(`Done: ${ev.concepts} concepts, ${ev.questions} questions.`);
+    if (ev.type === "error") buildLog.push(`Stopped: ${ev.message}`);
+    if (C && C.id === id && tab === "material") { const l = $("#blog"); if (l) { l.classList.remove("hide"); l.textContent = buildLog.join("\n"); l.scrollTop = l.scrollHeight; } }
+    if (ev.type === "done" || ev.type === "error") {
+      es.close();
+      if (C && C.id === id) { await refreshCourse(); C.building = false; render(); if (ev.type === "done") toast("Your course is ready. Open Study to begin."); }
+      loadState();
+    }
+  };
+  es.onerror = () => { es.close(); setTimeout(async () => { if (C && C.id === id) { await refreshCourse(); render(); if (C.building) followBuild(); } }, 2000); };
+}
+
+// ------------------------------------------------------------ progress
+function renderProgress() {
+  const st = C.stats;
+  const days = [];
+  for (let i = 29; i >= 0; i--) { const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10); days.push({ d, ...(st.byDay[d] || { reviews: 0, correct: 0 }) }); }
+  $("#panel").innerHTML = `
+    <div class="grid4">
+      <div class="card kpi"><div class="v">${Math.round(st.overall * 100)}%</div><div class="l">overall recall today</div></div>
+      <div class="card kpi"><div class="v">${st.mastered}<span class="faint" style="font-size:18px">/${st.concepts}</span></div><div class="l">concepts mastered (${st.passed} passed)</div></div>
+      <div class="card kpi"><div class="v">${st.accuracy === null ? "–" : Math.round(st.accuracy * 100) + "%"}</div><div class="l">right in your last ${Math.min(200, st.reviews)} answers</div></div>
+      <div class="card kpi"><div class="v">${st.streak}</div><div class="l">day streak · ${st.reviews} answers in total</div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h2>Coming up</h2><p class="small muted" style="margin-top:-4px">Reviews due over the next two weeks.</p>${bars(st.forecast.map((v, i) => ({ v, l: i === 0 ? "today" : i === 1 ? "tmrw" : `+${i}` })), "var(--accent)")}</div>
+    <div class="card" style="margin-top:16px"><h2>Last 30 days</h2><p class="small muted" style="margin-top:-4px">Answers per day; the darker part is what you got right.</p>${bars(days.map((x) => ({ v: x.reviews, v2: x.correct, l: x.d.slice(8) })), "color-mix(in srgb,var(--good) 35%,transparent)", "var(--good)")}</div>`;
+}
+function bars(data, color, color2) {
+  const w = 640, h = 140, top = 16, max = Math.max(1, ...data.map((d) => d.v)), bw = w / data.length;
+  return `<svg class="chart" viewBox="0 ${-top} ${w} ${h + 18 + top}" width="100%" role="img" aria-label="bar chart">${data.map((d, i) => {
+    const bh = (d.v / max) * h, b2 = d.v2 !== undefined ? (d.v2 / max) * h : 0, x = i * bw + bw * 0.15;
+    return `<rect x="${x}" y="${h - bh}" width="${bw * 0.7}" height="${bh}" rx="3" fill="${color}"><title>${d.l}: ${d.v}</title></rect>${color2 ? `<rect x="${x}" y="${h - b2}" width="${bw * 0.7}" height="${b2}" rx="3" fill="${color2}"/>` : ""}${data.length <= 14 || i % 5 === 0 ? `<text x="${x + bw * 0.35}" y="${h + 14}" text-anchor="middle">${d.l}</text>` : ""}${d.v && data.length <= 14 ? `<text x="${x + bw * 0.35}" y="${h - bh - 4}" text-anchor="middle">${d.v}</text>` : ""}`;
+  }).join("")}</svg>`;
+}
+
+// ------------------------------------------------------------ dialogs
+document.addEventListener("click", (e) => { const x = e.target.closest("[data-close]"); if (x) x.closest("dialog").close(); });
+$("#menu").onclick = () => $("#aside").classList.toggle("collapsed");
+$("#new-course").onclick = () => { $("#n-name").value = ""; $("#newc").showModal(); $("#n-name").focus(); };
+$("#n-name").onkeydown = (e) => { if (e.key === "Enter") $("#n-create").click(); };
+$("#n-create").onclick = async () => {
+  const name = $("#n-name").value.trim(); if (!name) return $("#n-name").focus();
+  const c = await api("/courses", { body: { name } });
+  $("#newc").close(); await loadState(); await openCourse(c.id, "material");
+};
+const PRESETS = [["freeflow", "http://127.0.0.1:4141/v1", "default"], ["Ollama", "http://127.0.0.1:11434/v1", ""], ["OpenRouter", "https://openrouter.ai/api/v1", ""], ["Groq", "https://api.groq.com/openai/v1", "llama-3.3-70b-versatile"], ["OpenAI", "https://api.openai.com/v1", ""]];
+function openSettings() {
+  $("#s-base").value = S.settings.baseUrl; $("#s-model").value = S.settings.model; $("#s-key").value = "";
+  $("#s-keystate").textContent = S.settings.hasKey ? "(a key is saved)" : "";
+  $("#s-current").innerHTML = S.llm.configured ? `In use now: <b>${esc(S.llm.model)}</b> at ${esc(S.llm.baseUrl)} (${esc(S.llm.source)}).` : "No model is connected yet.";
+  $("#s-test").textContent = "";
+  $("#presets").innerHTML = PRESETS.map(([n], i) => `<button class="btn sm" data-p="${i}">${n}</button>`).join("");
+  $$("#presets [data-p]").forEach((b) => b.onclick = () => { const p = PRESETS[b.dataset.p]; $("#s-base").value = p[1]; if (p[2]) $("#s-model").value = p[2]; $("#s-model").focus(); });
+  $("#settings").showModal();
+}
+$("#open-settings").onclick = openSettings;
+async function saveSettings() { await api("/settings", { body: { baseUrl: $("#s-base").value, model: $("#s-model").value, apiKey: $("#s-key").value } }); await loadState(); }
+$("#s-save").onclick = async () => { try { await saveSettings(); $("#settings").close(); toast("Model settings saved"); if (C) render(); else render(); } catch (e) { $("#s-test").textContent = e.message; } };
+$("#s-try").onclick = async () => {
+  try { await saveSettings(); $("#s-test").innerHTML = `<span class="spin"></span>`; const r = await api("/settings/test", { body: {} }); $("#s-test").innerHTML = r.ok ? `<span class="chip good">Works</span> ${esc(r.model)} answered in ${r.ms} ms.` : `<span class="chip bad">Failed</span> ${esc(r.error)}`; }
+  catch (e) { $("#s-test").innerHTML = `<span class="chip bad">Failed</span> ${esc(e.message)}`; }
+};
+
+// ------------------------------------------------------------ start
+(async () => {
+  await loadState();
+  let last = null; try { last = localStorage.getItem("masterly-course"); } catch {}
+  const target = S.courses.find((c) => c.id === last) || S.courses[0];
+  if (target) await openCourse(target.id, target.concepts ? "study" : "material"); else render();
+})();
+</script>
+</body>
+</html>
