@@ -34,7 +34,7 @@
   },
   "type": "module",
   "dependencies": {
-    "pdfjs-dist": "^5.4.296"
+    "pdfjs-dist": "^6.4.299"
   },
   "bin": {
     "masterly": "bin/masterly.js"
