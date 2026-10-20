@@ -1,0 +1,57 @@
+{
+  "name": "masterly",
+  "version": "1.0.0",
+  "description": "Learn anything from your own material: concepts in learning order, questions that quote your sources word for word, and spaced repetition that makes it stick.",
+  "scripts": {
+    "start": "node bin/masterly.js",
+    "test": "node --test test/*.test.js",
+    "test:ui": "node --test test/ui/*.test.js",
+    "typecheck": "tsc -p jsconfig.json"
+  },
+  "keywords": [
+    "learning",
+    "tutor",
+    "spaced-repetition",
+    "fsrs",
+    "study",
+    "flashcards",
+    "anki",
+    "rag",
+    "llm",
+    "education",
+    "quiz",
+    "mastery-learning",
+    "local-first",
+    "ollama"
+  ],
+  "author": "Ethos 6",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "playwright": "^1.56.1",
+    "ts-fsrs": "^5.4.2",
+    "typescript": "^5.9.3"
+  },
+  "type": "module",
+  "dependencies": {
+    "pdfjs-dist": "^5.4.296"
+  },
+  "bin": {
+    "masterly": "bin/masterly.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ethos6/masterly.git"
+  },
+  "homepage": "https://github.com/Ethos6/masterly#readme",
+  "bugs": "https://github.com/Ethos6/masterly/issues"
+}
